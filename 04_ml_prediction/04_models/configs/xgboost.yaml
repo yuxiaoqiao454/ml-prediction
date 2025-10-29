@@ -1,0 +1,31 @@
+# XGBoost Configuration
+
+xgboost_default:
+  model_type: xgboost
+  description: "XGBoost with default parameters"
+  n_estimators: 100
+  max_depth: 6
+  learning_rate: 0.1
+  subsample: 0.8
+  colsample_bytree: 0.8
+  random_state: 42
+
+xgboost_conservative:
+  model_type: xgboost
+  description: "Conservative XGBoost (less overfitting)"
+  n_estimators: 100
+  max_depth: 3
+  learning_rate: 0.05
+  subsample: 0.7
+  colsample_bytree: 0.7
+  random_state: 42
+
+xgboost_aggressive:
+  model_type: xgboost
+  description: "Aggressive XGBoost (more complex)"
+  n_estimators: 200
+  max_depth: 8
+  learning_rate: 0.1
+  subsample: 0.9
+  colsample_bytree: 0.9
+  random_state: 42

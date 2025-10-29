@@ -1,0 +1,6 @@
+base_dir: /Users/xiaoqiao/Documents/GitHub/ml-prediction/02n_network_preprocessing
+hashtags_csv: 02n_network_preprocessing/inputs/hashtags_by_post_full_users.csv
+comments_csv: 02n_network_preprocessing/inputs/hashtags_by_post_full_users_comments.csv
+tags_csv: 02n_network_preprocessing/inputs/hashtags_by_post_full_users_tags.csv
+exposure_clamp_hours: 360
+threads: 4

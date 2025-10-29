@@ -1,0 +1,9 @@
+base_dir: /Users/xiaoqiao/ml-prediction/03_networks/data
+step_days: 30
+min_edges: 10
+min_sim: 0.01
+min_shared: 1   
+topk: 50
+weighted: false
+projection_method: count
+clustering_method: infomap

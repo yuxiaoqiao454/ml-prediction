@@ -1,0 +1,34 @@
+# Logistic Regression Configuration
+
+logistic_default:
+  model_type: logistic
+  description: "Logistic Regression with balanced class weights"
+  C: 1.0                    # Inverse regularization strength
+  class_weight: balanced    # Handle class imbalance
+  max_iter: 1000
+  random_state: 42
+
+logistic_strong_reg:
+  model_type: logistic
+  description: "Logistic Regression with strong regularization"
+  C: 0.1                    # Stronger regularization
+  class_weight: balanced
+  max_iter: 1000
+  random_state: 42
+
+logistic_weak_reg:
+  model_type: logistic
+  description: "Logistic Regression with weak regularization"
+  C: 10.0                   # Weaker regularization
+  class_weight: balanced
+  max_iter: 1000
+  random_state: 42
+
+decision_tree:
+  model_type: decision_tree
+  description: "Simple interpretable decision tree"
+  max_depth: 5
+  min_samples_split: 20
+  min_samples_leaf: 10
+  class_weight: balanced
+  random_state: 42

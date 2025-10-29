@@ -1,0 +1,55 @@
+# Network Feature Extraction Configuration
+# Location: 04_ml_prediction/01_features/configs/network_features.yaml
+
+# Which feature families to extract
+enabled_features:
+  - basic_stats       # n_nodes, n_edges, density
+  - degree_stats      # mean, max, std, gini
+  - clustering        # avg_clustering_coef, transitivity
+  - community_basic   # modularity, n_communities, entropy
+  - temporal_delta    # changes vs previous window
+
+# Which graphs to extract features from
+compute_on:
+  bipartite: true
+  projection_influencer: true   # count_A_imported
+  projection_audience: true     # count_B_imported
+
+# Projection and clustering methods to use
+projection_method: count
+clustering_method: infomap
+
+# Feature-specific parameters
+basic_stats:
+  metrics: [n_nodes, n_edges, density]
+
+degree_stats:
+  metrics: [mean, max, std, gini]
+  
+clustering:
+  metrics: [avg_clustering, transitivity]
+  sample_size: 1000  # For large graphs, sample nodes for speed
+  
+community_basic:
+  metrics: [modularity, n_communities, size_entropy, largest_community_pct]
+
+temporal_delta:
+  metrics: [edge_turnover, delta_modularity, delta_avg_degree, delta_density]
+  require_prev_window: true
+
+# Missing data handling
+missing_projection:
+  fill_value: NA
+  add_flag: true  # Add has_influencer_proj, has_audience_proj flags
+
+missing_prev_window:
+  fill_value: NA
+  add_flag: true  # Add has_prev_window flag
+
+# I/O Paths
+input:
+  network_windows: "03_networks/data"
+  
+output:
+  path: "04_ml_prediction/01_features/outputs/network_features.parquet"
+  include_metadata: true  # Save hashtag, window_end for joining

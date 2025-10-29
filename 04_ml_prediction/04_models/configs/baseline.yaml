@@ -1,0 +1,11 @@
+# Baseline Models Configuration
+# Simple baselines for sanity checking
+
+majority_baseline:
+  model_type: majority_baseline
+  description: "Always predict majority class (non-burst)"
+  
+random_baseline:
+  model_type: random_baseline
+  description: "Random predictions stratified by class distribution"
+  random_state: 42

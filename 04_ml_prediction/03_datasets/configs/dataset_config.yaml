@@ -1,0 +1,36 @@
+# Dataset Configuration
+# Location: 04_ml_prediction/03_datasets/configs/dataset_config.yaml
+
+# Input paths
+input:
+  timeseries_features: "04_ml_prediction/01_features/outputs/timeseries_features.parquet"
+  network_features: "04_ml_prediction/01_features/outputs/network_features.parquet"
+  labels: "04_ml_prediction/02_labels/labels_all.parquet"
+
+# Output paths
+output:
+  samples_dir: "04_ml_prediction/03_datasets/outputs"
+  dataset_version: "v1"  # Increment when adding hashtags or changing features
+  
+# Sample building rules
+building:
+  # Which label to use as target
+  target_label: "label_burst_comments"  # or "label_burst_mentions"
+  
+  # Window matching requirements
+  require_contiguous: true      # T+1 must be exactly 30 days after T
+  gap_days: 30                  # Expected gap between windows
+  
+  # Data completeness
+  min_feature_coverage: 0.0     # 0.0 = allow any, 0.8 = require 80% non-NA features
+  
+# Feature selection (optional - apply during split, not build)
+features:
+  exclude_patterns: []  # e.g., ['_log'] to exclude log-transformed features
+  include_only: []      # If specified, only use these features
+
+# Metadata to include
+metadata:
+  include_window_dates: true
+  include_flags: true           # has_all_data, is_contiguous, etc.
+  add_timestamp: true

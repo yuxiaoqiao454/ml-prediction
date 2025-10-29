@@ -1,0 +1,74 @@
+# Time Series Feature Extraction Configuration
+# Location: 04_ml_prediction/01_features/configs/timeseries_features.yaml
+
+# Which feature families to extract
+enabled_features:
+  - level_dispersion
+  - growth_acceleration
+  - trend
+  - peak_detection
+  - percentiles
+  - recency
+  - sparsity
+  - volatility
+  - autocorrelation
+  - changepoint
+
+# Feature-specific parameters
+level_dispersion:
+  metrics: [mean, std, median, cv]  # cv = coefficient of variation
+  
+growth_acceleration:
+  comparison_windows:
+    - [24, 30]  # Last 7 days
+    - [17, 23]  # Previous 7 days (for growth calculation)
+    - [1, 7]    # First 7 days (for early vs late comparison)
+
+trend:
+  method: linear_regression  # Fit line to 30 days
+  
+peak_detection:
+  metrics: [peak_ratio, n_peaks, peak_position_day]
+  min_prominence: 1.5  # Peak must be 1.5x higher than neighbors
+
+percentiles:
+  quantiles: [0.25, 0.50, 0.75, 0.90]
+  
+recency:
+  compare_periods:
+    first_7: [1, 7]
+    last_7: [24, 30]
+
+sparsity:
+  zero_threshold: 0.01  # Values below this considered "zero"
+  
+volatility:
+  window_days: 7  # Compute volatility over last 7 days
+  method: std_of_diff  # Standard deviation of daily differences
+
+autocorrelation:
+  lags: [1, 3, 7]  # 1-day, 3-day, week
+  
+changepoint:
+  use_pelt_results: true  # From labeling stage
+  features: [recent_cp_flag, last_cp_jump]
+  guard_days: 7
+
+# Which metrics to compute features for
+apply_to:
+  mentions: true
+  comments: true
+
+# Transformations
+transformations:
+  log: true      # Add log-transformed versions
+  relative: false # Add hashtag-relative versions (v2 - requires baselines)
+
+# I/O
+input:
+  window_slices: "02t_timeseries/window_slices"
+  labels: "04_ml_prediction/02_labels/labels_all.parquet"  # For changepoint info
+
+output:
+  path: "04_ml_prediction/01_features/outputs/timeseries_features.parquet"
+  include_metadata: true  # Save hashtag, window_end for joining

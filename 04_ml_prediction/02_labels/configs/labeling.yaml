@@ -1,0 +1,30 @@
+# Labeling Configuration for Burst Detection
+# Location: 04_ml_prediction/configs/labeling.yaml
+
+labeling:
+  # Method to use (from registry)
+  method: "pelt"
+  
+  # Which time series variant to use
+  # Options: "raw", "norm", "smooth"
+  timeseries_variant: "raw"
+  
+  # PELT algorithm parameters
+  model: "l2"           # Cost function: "l1", "l2", "rbf", "linear", "normal", "ar"
+  penalty: "bic"        # Penalty value or method: int/float or "bic", "aic"
+  min_seg_len: 7        # Minimum segment length (days)
+  
+  # Burst detection thresholds
+  guard_days: 7         # Days around boundary to search for change-point
+  rel_jump: 1.0         # Relative jump threshold (mean_t1 >= (1+rel_jump)*mean_t)
+  abs_jump: 10          # Absolute jump threshold (mean_t1 - mean_t >= abs_jump)
+  
+  # Data quality filters
+  min_coverage_pct: 30  # Minimum % of days with data in window
+  
+# I/O Paths (optional overrides)
+paths:
+  window_slices: "02t_timeseries/window_slices"
+  mentions_csv: "02t_timeseries/csvs/hashtag_timeseries_mentions_norm_smooth.csv"
+  comments_csv: "02t_timeseries/csvs/hashtag_timeseries_comments_norm_smooth.csv"
+  output: "04_ml_prediction/02_labels/labels_all.parquet"
