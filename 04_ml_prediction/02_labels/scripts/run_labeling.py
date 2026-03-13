@@ -12,8 +12,8 @@ Supports multiple labeling methods via registry pattern.
 Currently implements: PELT
 
 Usage:
-  python run_labeling.py --config configs/labeling.yaml
-  python run_labeling.py --limit 5 --dry-run
+  python 04_ml_prediction/02_labels/scripts/run_labeling.py --config 04_ml_prediction/02_labels/configs/labeling_cpinside.yaml --output 04_ml_prediction/02_labels/labels_h550_cpinside.parquet
+  python 04_ml_prediction/02_labels/scripts/run_labeling.py --limit 5 --dry-run
 """
 
 import argparse
@@ -26,6 +26,8 @@ import numpy as np
 import yaml
 from tqdm import tqdm
 import ruptures as rpt
+import json
+import subprocess
 
 warnings.filterwarnings('ignore')
 
@@ -168,18 +170,29 @@ def run_pelt_labeling(hashtag, windows_df, timeseries_df, config):
             mean_prev = np.mean(prev_mentions)
             
             # Check for change-point near boundary
-            has_cp_near = False
+            has_cp_inside = False
             cp_position = None
             
             if cps_mentions is not None:
                 # Find CPs near window start (boundary between prev and curr)
                 # boundary_idx = np.searchsorted(dates, window_start)
-                boundary_idx = date_to_idx.get(window_start, len(dates))  # Get index of boundary
+                # boundary_idx = date_to_idx.get(window_start, len(dates))  # Get index of boundary
+                # for cp_idx in cps_mentions[:-1]:  # Exclude endpoint
+                #     if abs(cp_idx - boundary_idx) <= guard_days:
+                #         has_cp_near = True
+                #         cp_position = dates[cp_idx]
+                #         break
+                window_start_date = pd.to_datetime(window_start)
+                window_end_date = pd.to_datetime(window_end)
+                
                 for cp_idx in cps_mentions[:-1]:  # Exclude endpoint
-                    if abs(cp_idx - boundary_idx) <= guard_days:
-                        has_cp_near = True
-                        cp_position = dates[cp_idx]
-                        break
+                    cp_date = dates[cp_idx]
+                    
+                    # Is CP inside window T? (exclusive start, inclusive end)
+                    if window_start_date < cp_date <= window_end_date:
+                        has_cp_inside = True
+                        cp_position = cp_date
+                        break  # Found one, that's enough
             
             # Compute jump metrics
             jump_abs = mean_curr - mean_prev
@@ -187,7 +200,7 @@ def run_pelt_labeling(hashtag, windows_df, timeseries_df, config):
             
             # Label logic
             label = 0
-            if has_cp_near and jump_abs >= abs_jump and jump_ratio >= (1 + rel_jump):
+            if has_cp_inside and jump_abs >= abs_jump and jump_ratio >= (1 + rel_jump):
                 label = 1
             
             row.update({
@@ -196,7 +209,7 @@ def run_pelt_labeling(hashtag, windows_df, timeseries_df, config):
                 'mean_mentions_curr': float(mean_curr),
                 'jump_ratio_mentions': float(jump_ratio),
                 'jump_absolute_mentions': float(jump_abs),
-                'has_cp_near_boundary_mentions': has_cp_near,
+                'has_cp_inside_boundary_mentions': has_cp_inside,
                 'cp_position_mentions': pd.Timestamp(cp_position).strftime('%Y-%m-%d') if cp_position is not None else None,
             })
         else:
@@ -206,7 +219,7 @@ def run_pelt_labeling(hashtag, windows_df, timeseries_df, config):
                 'mean_mentions_curr': None,
                 'jump_ratio_mentions': None,
                 'jump_absolute_mentions': None,
-                'has_cp_near_boundary_mentions': None,
+                'has_cp_inside_boundary_mentions': None,
                 'cp_position_mentions': None,
             })
         
@@ -218,23 +231,33 @@ def run_pelt_labeling(hashtag, windows_df, timeseries_df, config):
             mean_curr_c = np.mean(curr_comments)
             mean_prev_c = np.mean(prev_comments)
             
-            has_cp_near_c = False
+            has_cp_inside_c = False
             cp_position_c = None
             
             if cps_comments is not None:
                 # boundary_idx = np.searchsorted(dates, window_start)
-                boundary_idx = date_to_idx.get(window_start, len(dates))
+                # boundary_idx = date_to_idx.get(window_start, len(dates))
+                # for cp_idx in cps_comments[:-1]:
+                #     if abs(cp_idx - boundary_idx) <= guard_days:
+                #         has_cp_near_c = True
+                #         cp_position_c = dates[cp_idx]
+                #         break
+                window_start_date = pd.to_datetime(window_start)
+                window_end_date = pd.to_datetime(window_end)
+                
                 for cp_idx in cps_comments[:-1]:
-                    if abs(cp_idx - boundary_idx) <= guard_days:
-                        has_cp_near_c = True
-                        cp_position_c = dates[cp_idx]
+                    cp_date = dates[cp_idx]
+                    
+                    if window_start_date < cp_date <= window_end_date:
+                        has_cp_inside_c = True
+                        cp_position_c = cp_date
                         break
             
             jump_abs_c = mean_curr_c - mean_prev_c
             jump_ratio_c = mean_curr_c / mean_prev_c if mean_prev_c > 0 else np.inf
             
             label_c = 0
-            if has_cp_near_c and jump_abs_c >= abs_jump and jump_ratio_c >= (1 + rel_jump):
+            if has_cp_inside_c and jump_abs_c >= abs_jump and jump_ratio_c >= (1 + rel_jump):
                 label_c = 1
             
             row.update({
@@ -243,7 +266,7 @@ def run_pelt_labeling(hashtag, windows_df, timeseries_df, config):
                 'mean_comments_curr': float(mean_curr_c),
                 'jump_ratio_comments': float(jump_ratio_c),
                 'jump_absolute_comments': float(jump_abs_c),
-                'has_cp_near_boundary_comments': has_cp_near_c,
+                'has_cp_inside_boundary_comments': has_cp_inside_c,
                 'cp_position_comments': pd.Timestamp(cp_position_c).strftime('%Y-%m-%d') if cp_position_c is not None else None,
             })
         else:
@@ -253,7 +276,7 @@ def run_pelt_labeling(hashtag, windows_df, timeseries_df, config):
                 'mean_comments_curr': None,
                 'jump_ratio_comments': None,
                 'jump_absolute_comments': None,
-                'has_cp_near_boundary_comments': None,
+                'has_cp_inside_boundary_comments': None,
                 'cp_position_comments': None,
             })
         
@@ -320,6 +343,99 @@ def load_timeseries_for_hashtag(hashtag, mentions_path, comments_path, variant='
             merged[col] = merged[col].fillna(0)
     
     return merged
+
+def log_labeling_run(config_path, output_path, labeling_config, summary_stats):
+    """
+    Automatically log labeling run metadata to JSON file.
+    
+    Parameters:
+    -----------
+    config_path : Path
+        Path to config file used
+    output_path : Path
+        Path to output labels file
+    labeling_config : dict
+        Labeling configuration parameters
+    summary_stats : dict
+        Summary statistics from the run
+    """
+    import json
+    import subprocess
+    from pathlib import Path
+    
+    log_file = output_path.parent / "labeling_runs.json"
+    
+    # Get git commit (if available)
+    try:
+        git_commit = subprocess.check_output(
+            ['git', 'rev-parse', '--short', 'HEAD'],
+            stderr=subprocess.DEVNULL
+        ).decode('ascii').strip()
+    except:
+        git_commit = None
+    
+    # Load existing log
+    if log_file.exists():
+        with open(log_file, 'r') as f:
+            log_data = json.load(f)
+    else:
+        log_data = {"runs": []}
+    
+    # Extract run_id from output filename
+    run_id = output_path.stem.replace('labels_', '')
+    
+    # Create new entry
+    run_entry = {
+        "run_id": run_id,
+        "timestamp": datetime.now().isoformat(),
+        "config_file": str(config_path),
+        "output_file": str(output_path),
+        
+        # Parameters from config
+        "parameters": {
+            "method": labeling_config.get('method', 'pelt'),
+            "timeseries_variant": labeling_config.get('timeseries_variant', 'raw'),
+            "model": labeling_config.get('model', 'l2'),
+            "penalty": labeling_config.get('penalty', 'bic'),
+            "min_seg_len": labeling_config.get('min_seg_len', 7),
+            "use_guard_days": labeling_config.get('use_guard_days', labeling_config.get('guard_days') is not None),
+            "guard_days": labeling_config.get('guard_days'),
+            "rel_jump": labeling_config.get('rel_jump', 1.0),
+            "abs_jump": labeling_config.get('abs_jump', 10),
+            "min_coverage_pct": labeling_config.get('min_coverage_pct', 30),
+        },
+        
+        # Summary statistics
+        "data": {
+            "n_hashtags_processed": summary_stats['n_hashtags'],
+            "n_hashtags_success": summary_stats['n_success'],
+            "n_hashtags_failed": summary_stats['n_failed'],
+            "n_windows_total": summary_stats['n_windows_total'],
+            "n_windows_labeled": summary_stats['n_windows_labeled'],
+            "n_bursts_mentions": summary_stats['n_bursts_mentions'],
+            "n_bursts_comments": summary_stats['n_bursts_comments'],
+            "burst_rate_mentions": summary_stats['burst_rate_mentions'],
+            "burst_rate_comments": summary_stats['burst_rate_comments'],
+        },
+        
+        # Version control
+        "git_commit": git_commit,
+        
+        # Notes
+        "notes": labeling_config.get('notes', '')
+    }
+    
+    # Check if run_id already exists (overwrite if re-running)
+    existing_runs = [r for r in log_data['runs'] if r['run_id'] != run_id]
+    existing_runs.append(run_entry)
+    log_data['runs'] = existing_runs
+    
+    # Save
+    with open(log_file, 'w') as f:
+        json.dump(log_data, f, indent=2)
+    
+    print(f"\n✓ Logged run to {log_file}")
+    print(f"  Run ID: {run_id}")
 
 
 def main():
@@ -440,13 +556,72 @@ def main():
                 'pct_burst_comments': 0,
             })
     
+    # # Concatenate all labels
+    # if not args.dry_run and all_labels:
+    #     final_df = pd.concat(all_labels, ignore_index=True)
+    #     final_df.to_parquet(output_path, index=False)
+    #     print(f"\n✓ Saved {len(final_df)} labeled windows to {output_path}")
+    
+    # # Save summary
+    # if not args.dry_run:
+    #     summary_df = pd.DataFrame(summary_rows)
+    #     summary_df.to_csv(summary_csv, index=False)
+        
+    #     with open(log_file, 'w') as f:
+    #         f.write(f"Labeling Summary - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    #         f.write(f"{'='*80}\n")
+    #         f.write(f"Method: {method}\n")
+    #         f.write(f"Total hashtags: {len(summary_df)}\n")
+    #         f.write(f"Total windows labeled: {summary_df['n_windows_labeled'].sum()}\n")
+    #         f.write(f"\nPer-hashtag statistics:\n")
+    #         f.write(summary_df.to_string(index=False))
+        
+    #     print(f"✓ Saved summary to {summary_csv}")
+    #     print(f"✓ Saved log to {log_file}")
+    
+    # print(f"\n{'='*80}")
     # Concatenate all labels
+    success_count = 0
+    fail_count = 0
+    
     if not args.dry_run and all_labels:
         final_df = pd.concat(all_labels, ignore_index=True)
         final_df.to_parquet(output_path, index=False)
         print(f"\n✓ Saved {len(final_df)} labeled windows to {output_path}")
+        
+        # Compute summary statistics
+        n_bursts_mentions = final_df['label_burst_mentions'].sum() if 'label_burst_mentions' in final_df else 0
+        n_bursts_comments = final_df['label_burst_comments'].sum() if 'label_burst_comments' in final_df else 0
+        burst_rate_mentions = n_bursts_mentions / len(final_df) if len(final_df) > 0 else 0
+        burst_rate_comments = n_bursts_comments / len(final_df) if len(final_df) > 0 else 0
+        
+        # Count successes and failures
+        summary_df = pd.DataFrame(summary_rows)
+        success_count = (summary_df['n_windows_labeled'] > 0).sum()
+        fail_count = len(summary_df) - success_count
+        
+        # Prepare summary stats for logging
+        summary_stats = {
+            'n_hashtags': len(slice_files),
+            'n_success': success_count,
+            'n_failed': fail_count,
+            'n_windows_total': summary_df['n_windows_total'].sum(),
+            'n_windows_labeled': len(final_df),
+            'n_bursts_mentions': int(n_bursts_mentions),
+            'n_bursts_comments': int(n_bursts_comments),
+            'burst_rate_mentions': float(burst_rate_mentions),
+            'burst_rate_comments': float(burst_rate_comments),
+        }
+        
+        # Log this run
+        log_labeling_run(
+            config_path=Path(args.config),
+            output_path=output_path,
+            labeling_config=labeling_config,
+            summary_stats=summary_stats
+        )
     
-    # Save summary
+    # Save per-hashtag summary
     if not args.dry_run:
         summary_df = pd.DataFrame(summary_rows)
         summary_df.to_csv(summary_csv, index=False)

@@ -7,7 +7,7 @@ Creates samples where:
 - Label comes from window T+1 (next contiguous window)
 
 Usage:
-  python build_samples.py --config configs/dataset_config.yaml
+  python 04_ml_prediction/03_datasets/scripts/build_samples.py --config 04_ml_prediction/03_datasets/configs/dataset_config.yaml
   python build_samples.py --verbose --dry-run
 """
 

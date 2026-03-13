@@ -1,0 +1,31 @@
+# ============================================
+# METADATA
+# ============================================
+config_name: "h550_cpinside"
+dataset_hashtags: 550
+logic_type: "cp_inside_window"
+status: "active"
+created: "2024-11-01"
+notes: |
+  Fixed labeling logic - checks CP inside entire window only.
+  No temporal leakage. Use for all new experiments.
+
+# ============================================
+# PARAMETERS
+# ============================================
+labeling:
+  method: "pelt"
+  timeseries_variant: "raw"
+  model: "l2"
+  penalty: "bic"
+  min_seg_len: 7
+  # guard_days removed - now checks entire window
+  rel_jump: 1.0
+  abs_jump: 10
+  min_coverage_pct: 30
+
+paths:
+  window_slices: "02t_timeseries/window_slices"
+  mentions_csv: "02t_timeseries/csvs/hashtag_timeseries_mentions_norm_smooth.csv"
+  comments_csv: "02t_timeseries/csvs/hashtag_timeseries_comments_norm_smooth.csv"
+  output: "04_ml_prediction/02_labels/labels_h550_cpinside.parquet"

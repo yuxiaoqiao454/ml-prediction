@@ -8,7 +8,7 @@ Uses hashtag-based stratified splitting:
 - Saves split assignments and metadata
 
 Usage:
-  python split_data.py --input samples_full_v1.parquet
+  python 04_ml_prediction/03_datasets/scripts/split_data.py --input 04_ml_prediction/03_datasets/outputs/samples_full_h550_cpinside.parquet --dataset-version h550_cpinside
   python split_data.py --train-size 0.7 --val-size 0.15
 """
 

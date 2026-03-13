@@ -6,7 +6,7 @@ Uses registry pattern for modular feature extraction.
 Processes both mentions and comments metrics.
 
 Usage:
-  python extract_timeseries_features.py --config configs/timeseries_features.yaml
+  python 04_ml_prediction/01_features/scripts/extract_timeseries_features.py --config 04_ml_prediction/01_features/configs/timeseries_features.yaml
   python extract_timeseries_features.py --limit 10 --verbose
 """
 

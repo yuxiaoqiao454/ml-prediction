@@ -3,14 +3,14 @@
 
 # Input paths
 input:
-  timeseries_features: "04_ml_prediction/01_features/outputs/timeseries_features.parquet"
-  network_features: "04_ml_prediction/01_features/outputs/network_features.parquet"
-  labels: "04_ml_prediction/02_labels/labels_all.parquet"
+  timeseries_features: "04_ml_prediction/01_features/outputs/timeseries_features_v2.parquet"
+  network_features: "04_ml_prediction/01_features/outputs/network_features_v2.parquet"
+  labels: "04_ml_prediction/02_labels/labels_h550_cpinside.parquet"
 
 # Output paths
 output:
   samples_dir: "04_ml_prediction/03_datasets/outputs"
-  dataset_version: "v1"  # Increment when adding hashtags or changing features
+  dataset_version: "h550_cpinside"  # Increment when adding hashtags or changing features
   
 # Sample building rules
 building:

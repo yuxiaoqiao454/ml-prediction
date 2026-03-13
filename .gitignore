@@ -1,0 +1,22 @@
+/00_raw/
+/__pycache__/
+*.pyc
+.ipynb_checkpoints/
+logs/
+html_outputs/
+.env*
+.DS_Store
+
+# data
+*.csv
+*.parquet
+
+# runs
+*.ok
+*.json
+
+# models
+*.pkl
+
+# images
+*.png

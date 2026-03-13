@@ -10,13 +10,15 @@ Usage:
     python train.py --config configs/baseline.yaml --model random_baseline
     
     # Train logistic regression
-    python train.py --config configs/logistic.yaml --model logistic_default
+    python train.py --config 04_ml_prediction/04_models/configs/logistic.yaml --model logistic_default
     
     # Train with custom dataset version
-    python train.py --config configs/logistic.yaml --model logistic_default --dataset-version v1
+    python 04_ml_prediction/04_models/scripts/train.py --config 04_ml_prediction/04_models/configs/logistic.yaml --model logistic_weak_reg --dataset-version h550_cpinside
+    python 04_ml_prediction/04_models/scripts/train.py --config 04_ml_prediction/04_models/configs/random_forest.yaml --model random_forest_default --dataset-version h550_cpinside
+    python 04_ml_prediction/04_models/scripts/train.py --config 04_ml_prediction/04_models/configs/xgboost.yaml --model xgboost_default --dataset-version h550_cpinside
     
     # Run all baselines
-    python train.py --run-all-baselines
+    python 04_ml_prediction/04_models/scripts/train.py --run-all-baselines --dataset-version h550_cpinside
 """
 
 import argparse
