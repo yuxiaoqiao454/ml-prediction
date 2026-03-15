@@ -1,0 +1,11 @@
+hashtag,window_end,adj_mode,feature_mode,n_nodes,n_inf,n_aud,test_auc,quality_score
+disneysmmc,2018-03-15,recency_weighted,type+time,3043,,,0.9723164444444444,0.6431058686490847
+relatablememes,2019-04-02,recency_weighted,type+time,3076,,,0.9731833910034604,0.6405906703364347
+disneysmmc,2018-12-10,recency_weighted,type+time,3073,,,0.9706744221913765,0.6396044031149166
+halloween,2019-04-25,recency_weighted,type+time,3015,,,0.9420311358655952,0.6304621166685103
+relatablememes,2019-01-02,recency_weighted,type+time,3440,,,0.9962345621297248,0.6193591642577271
+hilarious,2019-04-25,recency_weighted,type+time,3171,,,0.9361048789818136,0.6135421576429385
+hbcu,2019-04-15,recency_weighted,type+time,3157,,,0.932816747129701,0.6131539672067667
+blackpanther,2019-03-02,recency_weighted,type+time,3093,,,0.9170364891518736,0.6109967385761752
+blackpanther,2019-01-31,recency_weighted,type+time,3019,,,0.8999714924784002,0.6090754797159325
+tot,2018-04-14,recency_weighted,type+time,3014,,,0.8982610795797609,0.6086662833882763

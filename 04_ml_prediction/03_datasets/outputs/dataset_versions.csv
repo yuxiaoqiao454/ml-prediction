@@ -1,0 +1,35 @@
+version,date_created,n_hashtags,n_samples,n_features,burst_rate,n_complete,notes,n_ts_features,n_net_features,n_emb_features,n_attr_features,n_spectral_features,n_gae_features
+v1,2025-10-28,132,2415,113,0.069,1024,Initial dataset - label_burst_comments,,,,,,
+v2,2025-10-31,526,12122,113,0.069,5151,Initial dataset - label_burst_comments,,,,,,
+h550_cpinside,2025-11-02,526,12122,113,0.082,5151,Initial dataset - label_burst_comments,,,,,,
+h550_cpinside_ts_only,2025-11-05,526,12122,64,0.082,5151,Initial dataset - label_burst_comments,,,,,,
+h550_cpinside_network_only,2025-11-05,526,12122,49,0.082,5151,Initial dataset - label_burst_comments,,,,,,
+h550_cpinside_ts_temporal_net,2025-11-05,526,12122,75,0.082,5151,Initial dataset - label_burst_comments,,,,,,
+h550_cpinside_static_network_only,2025-11-05,526,12122,38,0.082,5151,Initial dataset - label_burst_comments,,,,,,
+h550_cpinside_no_temporal_network,2025-11-05,526,12122,102,0.082,5151,Initial dataset - label_burst_comments,,,,,,
+h550_0.5rel,2025-11-10,526,12122,113,0.103,5151,Initial dataset - label_burst_comments,,,,,,
+h550_0.5rel_ts_embeddings,2025-11-12,526,12111,343,0.103,10761,label_burst_comments | TS=64 NET=0 EMB=279,64.0,0.0,279.0,,,
+h550_0.5rel_ts_embeddings_handdelta,2025-11-12,526,12111,354,0.103,7930,label_burst_comments | TS=64 NET=11 EMB=279,64.0,11.0,279.0,,,
+h550_0.5rel_75abs,2025-11-12,526,12122,113,0.034,5151,label_burst_comments | TS=64 NET=49 EMB=0,64.0,49.0,0.0,,,
+h550_cpinside_bip_emb,2025-11-12,526,12120,344,0.082,10764,label_burst_comments | TS=64 NET=0 EMB=280,64.0,0.0,280.0,,,
+h550_cpinside_ts_full_emb,2025-11-12,526,12120,624,0.082,11691,label_burst_comments | TS=64 NET=0 EMB=560,64.0,0.0,560.0,,,
+h550_0.5rel_ts_net_attr_nocat,2025-11-26,526,12122,163,0.103,5040,label_burst_comments | TS=64 NET=49 EMB=0 ATTR=50,64.0,49.0,0.0,50.0,,
+h550_0.5rel_ts_net_attr_cat,2025-11-26,526,12122,169,0.103,5040,label_burst_comments | TS=64 NET=49 EMB=0 ATTR=56,64.0,49.0,0.0,56.0,,
+h550_0.5rel_ts_net_attr_nopo_nocat,2025-11-26,526,12122,156,0.103,5040,label_burst_comments | TS=64 NET=49 EMB=0 ATTR=43,64.0,49.0,0.0,43.0,,
+h550_0.5rel_ts_net_gae_inflattr,2025-12-03,512,8198,190,0.116,5151,label_burst_comments | TS=64 NET=49 EMB=0 ATTR=0,64.0,49.0,0.0,0.0,0.0,77.0
+h550_0.5rel_ts_net_gae_inflattr_spec,2025-12-03,512,8198,198,0.116,5367,label_burst_comments | TS=64 NET=57 EMB=0 ATTR=0,64.0,57.0,0.0,0.0,8.0,77.0
+h550_0.5rel_ts_net_spec,2025-12-07,526,12122,213,0.103,302,label_burst_comments | TS=64 NET=149 EMB=0 ATTR=0,64.0,149.0,0.0,0.0,100.0,0.0
+h550_0.5rel_ts_spec,2025-12-07,526,12122,164,0.103,12,label_burst_comments | TS=64 NET=100 EMB=0 ATTR=0,64.0,100.0,0.0,0.0,100.0,0.0
+h550_0.5rel_ts_net_gae_bip,2025-12-17,526,12122,225,0.103,5151,label_burst_comments | TS=64 NET=49 EMB=0 ATTR=0,64.0,49.0,0.0,0.0,0.0,112.0
+h550_0.5rel_ts_gae_bip,2025-12-17,526,12122,176,0.103,1001,label_burst_comments | TS=64 NET=0 EMB=0 ATTR=0,64.0,0.0,0.0,0.0,0.0,112.0
+h550_0.5rel_ts_net_gae_tempbip_type,2025-12-26,526,12122,227,0.103,5151,label_burst_comments | TS=64 NET=49 EMB=0 ATTR=0,64.0,49.0,0.0,0.0,0.0,114.0
+h550_0.5rel_ts_gae_tempbip_type,2025-12-26,526,12122,178,0.103,1001,label_burst_comments | TS=64 NET=0 EMB=0 ATTR=0,64.0,0.0,0.0,0.0,0.0,114.0
+h550_0.5rel_ts_net_gae_tempbip_type_inf,2025-12-26,526,12122,176,0.103,5151,label_burst_comments | TS=64 NET=49 EMB=0 ATTR=0,64.0,49.0,0.0,0.0,0.0,63.0
+h550_0.5rel_ts_gae_tempbip_type_inf,2025-12-26,526,12122,127,0.103,1001,label_burst_comments | TS=64 NET=0 EMB=0 ATTR=0,64.0,0.0,0.0,0.0,0.0,63.0
+h550_0.5rel_ts_net_gae_tempbip_timetype,2025-12-27,526,12122,227,0.103,5151,label_burst_comments | TS=64 NET=49 EMB=0 ATTR=0,64.0,49.0,0.0,0.0,0.0,114.0
+h550_0.5rel_gae_tempbip_timetype,2025-12-28,526,12122,228,0.103,0,label_burst_comments | TS=0 NET=0 EMB=0 ATTR=0,0.0,0.0,0.0,0.0,0.0,228.0
+h550_0.5rel_ts_gae_tempbip_timetype,2025-12-28,526,12122,178,0.103,1001,label_burst_comments | TS=64 NET=0 EMB=0 ATTR=0,64.0,0.0,0.0,0.0,0.0,114.0
+h550_0.5rel_net_infattr_nocat,2026-01-14,526,12122,99,0.103,6513,label_burst_comments | TS=0 NET=49 EMB=0 ATTR=50,0.0,49.0,0.0,50.0,0.0,0.0
+h550_0.5rel_ts_infattr_nocat,2026-01-14,526,12122,114,0.103,3061,label_burst_comments | TS=64 NET=0 EMB=0 ATTR=50,64.0,0.0,0.0,50.0,0.0,0.0
+h550_cpinside_ts_net_infattr_nocat,2026-01-14,526,12122,163,0.082,5040,label_burst_comments | TS=64 NET=49 EMB=0 ATTR=50,64.0,49.0,0.0,50.0,0.0,0.0
+h550_0.5rel_75abs_ts_net_infattr_nocat,2026-01-14,526,12122,163,0.034,5040,label_burst_comments | TS=64 NET=49 EMB=0 ATTR=50,64.0,49.0,0.0,50.0,0.0,0.0

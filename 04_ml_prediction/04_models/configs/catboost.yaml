@@ -1,0 +1,35 @@
+# CatBoost Configuration
+
+catboost_default:
+  model_type: catboost
+  description: "CatBoost with default settings"
+  n_estimators: 100
+  max_depth: 6
+  learning_rate: 0.1
+  class_weight: balanced
+  random_state: 42
+
+  threshold_optimization:
+    enabled: false
+    mode: "unconstrained"
+    metric: "f1"
+    search_range: [0.1, 0.9]
+    search_step: 0.01
+    save_curve: true
+
+catboost_deep:
+  model_type: catboost
+  description: "Deeper CatBoost"
+  n_estimators: 200
+  max_depth: 8
+  learning_rate: 0.05
+  class_weight: balanced
+  random_state: 42
+
+  threshold_optimization:
+    enabled: false
+    mode: "unconstrained"
+    metric: "f1"
+    search_range: [0.1, 0.9]
+    search_step: 0.01
+    save_curve: true

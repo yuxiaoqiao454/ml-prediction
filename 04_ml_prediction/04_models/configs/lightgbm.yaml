@@ -1,0 +1,50 @@
+# LightGBM Configuration
+
+lightgbm_default:
+  model_type: lightgbm
+  description: "LightGBM with balanced settings"
+  n_estimators: 100
+  num_leaves: 31
+  max_depth: -1            # No limit
+  learning_rate: 0.1
+  min_child_samples: 20
+  subsample: 0.8
+  colsample_bytree: 0.8
+  class_weight: balanced
+  random_state: 42
+
+  threshold_optimization:
+    enabled: true
+    mode: "unconstrained"
+    metric: "f1"
+    search_range: [0.1, 0.9]
+    search_step: 0.01
+    save_curve: true
+
+lightgbm_deep:
+  model_type: lightgbm
+  description: "Deeper LightGBM (more leaves)"
+  n_estimators: 200
+  num_leaves: 63
+  max_depth: -1
+  learning_rate: 0.05
+  min_child_samples: 10
+  subsample: 0.8
+  colsample_bytree: 0.8
+  class_weight: balanced
+  random_state: 42
+
+  threshold_optimization:
+    enabled: false
+    mode: "constrained"
+
+    metric: "f1"
+
+    # For constrained mode:
+    objective: "precision"           # Maximize this
+    constraint_metric: "recall"  # Subject to this constraint
+    constraint_min: 0.5           # Minimum acceptable value
+
+    search_range: [0.1, 0.9]
+    search_step: 0.01
+    save_curve: true
